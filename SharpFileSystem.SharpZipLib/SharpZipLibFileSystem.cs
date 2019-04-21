@@ -37,7 +37,16 @@ namespace SharpFileSystem.SharpZipLib
         {
             return FileSystemPath.Parse(FileSystemPath.DirectorySeparator + entry.Name);
         }
-
+        public static SharpZipLibFileSystem Create(Stream s, string password)
+        {
+            var zipFile = ZipFile.Create(s);
+            zipFile.Password = password;
+            return new SharpZipLibFileSystem(zipFile);
+        }
+        public static SharpZipLibFileSystem Open(Stream s, string password)
+        {
+            return new SharpZipLibFileSystem(new ZipFile(s) { Password = password });
+        }
         protected string ToEntryPath(FileSystemPath path)
         {
             // Remove heading '/' from path.
